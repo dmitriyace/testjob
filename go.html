@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Форма регистрации</title>
+    <meta charset="utf-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styleform.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+</head>
+<body>
+<!--<h1>Откройте исходный код страницы, чтобы увидеть образец формы</h1>-->
+
+<div class="container">
+
+
+<!-- Образец формы для оформления заказа -->
+<form action="https://www.google.com/" id="frm" autocomplete="off">
+
+    <!--  *********************************
+
+          Обязательные поля
+
+          ********************************* -->
+
+    <!-- Ваш аккаунт в Бизоне. Замените XXXX на номер вашего аккаунта -->
+    <input type="hidden" name="uid" value="XXXX"/>
+
+    <!-- Идентификатор товара. Если товаров несколько, то перечисление id через запятую -->
+    <input type="hidden" name="item" value="tovar1,tovar2"/>
+
+    <!-- Фамилия -->
+    <input type="text" name="lastname" placeholder="Фамилия" class=""/>
+
+    <!-- Имя -->
+    <input type="text" name="firstname" placeholder="Имя" class=""/>
+
+    <!-- Отчество -->
+    <input type="text" name="middlename" placeholder="Отчество" class=""/>
+
+    <!-- email -->
+    <input id="email" name="email" placeholder="E-mail" required/>
+
+    <!-- Телефон -->
+    <input type="tel" name="phone" id="phone" placeholder="Телефон" required/>
+
+
+
+    <!-- *********************************
+
+         Дополнительные (необязательные) поля
+
+         ********************************* -->
+
+
+
+
+    <!-- Комментарий к заказу -->
+    <textarea name="comment" placeholder="Комментарий к заказу" class="" ></textarea>
+
+    <!-- поле для ввода промокода -->
+    <input type="text" name="promo" placeholder="Промокод"/>
+
+    <!-- Указываемая клиентом сумма заказа,
+      если товар предполагает динамическую цену.
+      Если товар с фиксированной ценой, то это поле нужно удалить.  -->
+    <input type="text" name="cost" placeholder="Стоимость заказа" class=""/>
+
+    <!-- идентификатор клиента, если нужно идентифицировать не по e-mail -->
+    <input type="hidden" name="clientId" value="" placeholder="Ваш идентификатор для верификации по e-mail"/>
+
+    <!-- Проверять ли дубликаты заказа. По умолчанию, 1 (да).
+          Часто бывает, когда покупатель несколько раз оформляет один и тот же заказ, пробуя разные способы оплаты.
+          Если эта опция включена, то при повторном оформлении новый заказ не создается — покупатель переадресуется на прежний заказ
+     -->
+    <input type="hidden" name="duplicate_check" value="1"/>
+
+
+    <!-- refid партнера, если нужно жестко привязать партнера к заказу
+          Замените REFID на реальный идентификатор партнера или уберите это поле.
+     -->
+    <input type="hidden" name="refid" value="REFID"/>
+
+    <!-- код билета зрителя. Это поле полезно, если оформление заказа происходит на лендинге, а не по прямой ссылке из комнаты -->
+    <input type="hidden" name="ticket" value=""/>
+    <input  type="submit" value="Подтвердить" class="btn animated slideInUp ">
+
+</form>
+</div>
+<!-- подключение jquery и masked input plugin'a для валидации телефона-->
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/jquery.maskedinput.min.js"></script>
+<!-- тут прописана валидация email'a-->
+<script src="js/script.js"></script>
+
+<!-- опциональный скрипт для определения партнера из URL -->
+<script type="text/javascript">
+    (function () {
+        // ** НАСТРОЙКА СКРИПТА **
+        // 1. задать актуальное название параметра в URL (url_key), содержащего refid партнера
+        // 2. задать селектор поля в форме, куда значение будет подставлено.
+        var params = [
+            {
+                url_key: 'partner',
+                input: 'input[name="refid"]',
+            },
+            {
+                url_key: 'ticket',
+                input: 'input[name="ticket"]',
+            },
+
+        ]
+
+        //
+        // Код ниже изменять не нужно.
+        //
+        function getUrlParams() {
+            var r = {};
+            try {
+                var args = window.location.search.slice(1).split('&');
+                for (var i = 0; i < args.length; i++) {
+                    var p = args[i];
+                    if (!p) continue;
+                    var a = p.split('=');
+                    if (!a[0]) continue;
+                    r[a[0]] = decodeURIComponent(a[1] || '');
+                }
+            }
+            catch (e) {
+                r = {};
+            }
+            return r;
+        }
+
+        function fillInputs(url_key, sel_key) {
+            var t = url_params[url_key] || '';
+            var inputs = document.querySelectorAll(sel_key);
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].value = t;
+            }
+        }
+
+        var url_params = getUrlParams();
+
+        for (var i = 0; i < params.length; i++) {
+            var d = params[i];
+            fillInputs(d.url_key, d.input);
+        }
+
+    })();
+</script>
+</body>
+</html>
